@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import "./Pages.css"
-
-
+import "./Pages.css";
 import { OverlayTrigger, Popover, Table } from "react-bootstrap"
 import Pagination from "../Pagination"
 import Spinner from "../Spinner"
@@ -82,18 +80,13 @@ function Pages() {
     return (
         <div>
             <HeaderNav />
-
             <div className="app-div">
                 <div className="trend-page">
                     <div className="search-div">
                         <select className="trend-inst" value={selectedPage} onChange={(e) => setSelectedPage(e.target.value)}>
-                            {
-                                schools && schools.map(sch => {
-                                    return <option>
-                                        {sch.Profile ? sch.Profile.name : undefined}
-                                    </option>
-                                })
-                            }
+                            {schools && schools.map(sch => {
+                                return <option>{sch.Profile ? sch.Profile.name : undefined}</option>
+                            })}
                         </select>
                         <div className="trigger">
                             <OverlayTrigger
