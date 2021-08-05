@@ -1,9 +1,8 @@
-
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 
-import { functions } from "firebase"
+import { functions } from "firebase";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBJqG4ROG2FsQlXAWvbtgOibo5PxAqGDUQ",
@@ -12,7 +11,7 @@ const firebaseConfig = {
   projectId: "my-project-7307f",
   storageBucket: "my-project-7307f.appspot.com",
   messagingSenderId: "712367246617",
-  appId: "1:712367246617:web:02e1571f7b95835f608988"
+  appId: "1:712367246617:web:02e1571f7b95835f608988",
 };
 
 // var firebaseConfig = {
@@ -32,24 +31,23 @@ export var storage = firebase.storage();
 
 const messaging = firebase.messaging();
 
-export const tokens = []
+export const tokens = [];
 
 Notification.requestPermission()
-  .then(permission => {
+  .then((permission) => {
     if (permission === "granted") {
-      messaging.getToken().then(token => {
-        tokens.push(token)
-      })
+      messaging.getToken().then((token) => {
+        tokens.push(token);
+      });
     } else {
-      console.log("permission denied")
+      console.log("permission denied");
     }
   })
-  .catch((err) => console.log(err))
+  .catch((err) => console.log(err));
 
-
-messaging.onMessage(payload => {
-  console.log("on message", payload)
-})
+messaging.onMessage((payload) => {
+  console.log("on message", payload);
+});
 
 export default fire;
 
@@ -57,7 +55,6 @@ export const auth = firebase.auth();
 export const firestore = firebase.firestore();
 export const secondAuth = firebase.initializeApp(firebaseConfig, "Secondary");
 // export const functions = firebase.functions()
-
 
 const provider = new firebase.auth.GoogleAuthProvider();
 export const signInWithGoogle = () => {
@@ -77,7 +74,7 @@ export const generateUserDocument = async (user, additionalData) => {
         displayName,
         email,
         photoURL,
-        ...additionalData
+        ...additionalData,
       });
     } catch (error) {
       console.error("Error creating user document", error);
@@ -86,14 +83,14 @@ export const generateUserDocument = async (user, additionalData) => {
   return getUserDocument(user.uid);
 };
 
-const getUserDocument = async uid => {
+const getUserDocument = async (uid) => {
   if (!uid) return null;
   try {
     const userDocument = await firestore.doc(`users/${uid}`).get();
 
     return {
       uid,
-      ...userDocument.data()
+      ...userDocument.data(),
     };
   } catch (error) {
     console.error("Error fetching user", error);

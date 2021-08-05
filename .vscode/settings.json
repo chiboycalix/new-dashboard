@@ -1,5 +1,8 @@
 {
     "cSpell.words": [
         "firestore"
-    ]
+    ],
+    "editor.tabSize": 2,
+    "editor.codeActionsOnSave": true,
+    "editor.quickSuggestions": true,
 }
