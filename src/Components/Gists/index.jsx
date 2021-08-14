@@ -1,18 +1,25 @@
 import React, { useState, useEffect } from "react";
-import "./gists.css";
+import "./gists.scss";
 
 import fire, { firestore } from "../../Firebase/firebase";
 import { Container, Row, Col } from "react-bootstrap";
-
+import { Radio, Input, Space, Form, DatePicker, TimePicker } from "antd";
 import Pagination from "../Pagination";
 import Spinner from "../Spinner";
-import Search from "../Search";
 import GistModal from "../GistModal";
 import CurrencyFormat from "react-currency-format";
 import ShowMoreText from "react-show-more-text";
 import HeaderNav from "../HeaderNav";
 import LazyLoad from "react-lazyload";
 import BaseMarkUp from "../Base/BaseMarkUp";
+import Card from "../Card";
+import SchoolsIcon from "../../assest/icons/schholngLogo.png";
+import Select from "../Select";
+import Search from "../SearchComponent";
+import SearchComponent from "../Searchh";
+import GistCard from "./GistCard";
+import { GistLists } from "./gists";
+import Button from "../Button";
 
 const Gists = () => {
   const [gistLength, setGistLength] = useState();
@@ -31,6 +38,8 @@ const Gists = () => {
   const [gistId, setGistId] = useState("");
   const [schGist, setSchGist] = useState();
   const [users, setUsers] = useState();
+  const [value, setValue] = useState(1);
+  const { RangePicker } = DatePicker;
 
   const indexOfLastPost = currentPage * postPerPage;
   const indexOfFirstPost = indexOfLastPost - postPerPage;
@@ -195,863 +204,80 @@ const Gists = () => {
   const gistDateFilter =
     schGist && schGist.filter((cr) => cr.date >= start && cr.date <= end);
 
+  const onChange = (e) => {
+    setValue(e.target.value);
+  };
+
+  const onFinish = (values) => {};
+
   return (
     <BaseMarkUp>
-      <div className="app-div">
-        <div className="gist-page">
-          <Container>
-            <Row>
-              <Col lg="12">
-                <input
-                  type="search"
-                  placeholder=" Search by username"
-                  className="gist-input"
-                  value={searchValue}
-                  onChange={(e) => setSearchValue(e.target.value)}
-                />
-              </Col>
-            </Row>
-          </Container>
-          <div className="gist-cont-div">
-            <select
-              className="gist-inst"
-              value={selectedGist}
-              onChange={(e) => setSelectedGist(e.target.value)}
-            >
-              {schools &&
-                schools.map((sch) => {
-                  return (
-                    <option>
-                      {sch.Profile ? sch.Profile.name : undefined}
-                    </option>
-                  );
-                })}
-            </select>
-
-            <p className="total-gist">
-              Total Gists:{" "}
-              <CurrencyFormat
-                value={gistLength}
-                displayType={"text"}
-                thousandSeparator={true}
-              />
-            </p>
+      <div className="gists-wrpper">
+        <div className="gists-header">
+          <div className="gists-cards">
+            <Card
+              label="Total Gist"
+              icon={SchoolsIcon}
+              value="400"
+              link="/gists"
+            />
           </div>
+          <div className="search-section">
+            <div className="select-gist">
+              <Select />
+            </div>
+            <div className="search-gist">
+              <Search />
+            </div>
+          </div>
+        </div>
 
-          <Container fluid>
-            <Row className="rowes">
-              <Col lg="8" md="8" xs="12" sm="8">
-                {!dateSearch ? (
-                  <div style={{ marginLeft: "-3%" }}>
-                    {radio === "All" ? (
-                      schGist ? (
-                        <div>
-                          {gistArr
-                            .sort((a, b) => b.date - a.date)
-                            .map((gists) => {
-                              return (
-                                <LazyLoad>
-                                  <Container fluid>
-                                    <Row>
-                                      <Col xs="12" className="all-gist">
-                                        <div className="gimst">
-                                          <div
-                                            className="allgist-div1"
-                                            onClick={() =>
-                                              handleGist(gists.postid)
-                                            }
-                                          >
-                                            <img
-                                              src={gists.userDp}
-                                              alt=""
-                                              className="gist-image"
-                                            />
-                                            <div className="allgist-div1-sub">
-                                              <p className="allgist-div1-sub-header">
-                                                {gists.user.username}
-                                              </p>
-                                              <p className="allgist-div1-sub-text">
-                                                {new Date(
-                                                  gists.date
-                                                ).toDateString()}
-                                              </p>
-                                            </div>
-                                          </div>
-                                          <div className="gimst-div">
-                                            <ShowMoreText
-                                              lines={1}
-                                              more="Show more"
-                                              less="Show less"
-                                              className="content"
-                                              anchorClass="my-anchor-css-class pt"
-                                              onClick={executeOnClick}
-                                              expanded={false}
-                                              width={700}
-                                            >
-                                              <p className="textss">
-                                                {gists.text}
-                                              </p>
-                                            </ShowMoreText>
-                                          </div>
+        <div className="content">
+          <div className="gists-details">
+            {GistLists.map((gist) => {
+              return (
+                <React.Fragment key={gist.id}>
+                  <GistCard gist={gist} />
+                </React.Fragment>
+              );
+            })}
+          </div>
+          <div className="gists-filter">
+            <p className="gist-filter-header">Filter</p>
+            <div className="gist-filter-by-status">
+              <p>By Status</p>
+              <Radio.Group onChange={onChange} value={value}>
+                <Space direction="vertical">
+                  <Radio value={1}>All</Radio>
+                  <Radio value={2}>Flagged</Radio>
+                </Space>
+              </Radio.Group>
+            </div>
 
-                                          <div>
-                                            {gists.sharedpost ? (
-                                              <div className="shared">
-                                                <span
-                                                  style={{
-                                                    fontSize: "10px",
-                                                    color: "grey",
-                                                  }}
-                                                >
-                                                  {" "}
-                                                  <img
-                                                    src="https://img.icons8.com/material-two-tone/14/000000/retweet.png"
-                                                    alt=""
-                                                  />{" "}
-                                                  Reposted
-                                                </span>
-                                                <p>{gists.sharedpost.text}</p>
-                                                <img
-                                                  src={
-                                                    gists.sharedpost.imgarray
-                                                      ? gists.sharedpost
-                                                          .imgarray[0].imgurl
-                                                      : undefined
-                                                  }
-                                                  alt=""
-                                                  className="allround-image"
-                                                />
-                                              </div>
-                                            ) : undefined}
-                                          </div>
-
-                                          <div className="action">
-                                            <div
-                                              style={{
-                                                display: "flex",
-                                                justifyContent: "flex-start",
-                                                alignItems: "center",
-                                                width: "100px",
-                                              }}
-                                            >
-                                              <img
-                                                src="https://img.icons8.com/ios-glyphs/14/000000/chat.png"
-                                                alt=""
-                                              />
-                                              <p className="list">
-                                                {postComment(gists.postid)}{" "}
-                                                comment
-                                              </p>
-                                            </div>
-                                            <div
-                                              style={{
-                                                display: "flex",
-                                                justifyContent: "flex-start",
-                                                alignItems: "center",
-                                                width: "100px",
-                                              }}
-                                            >
-                                              <img
-                                                src="https://img.icons8.com/ios-glyphs/14/000000/filled-like.png"
-                                                alt=""
-                                              />
-                                              <p className="list">
-                                                {postLikes(gists.postid)} like
-                                              </p>
-                                            </div>
-                                            <div
-                                              style={{
-                                                display: "flex",
-                                                justifyContent: "flex-start",
-                                                alignItems: "center",
-                                                width: "100px",
-                                              }}
-                                            >
-                                              <img
-                                                src="https://img.icons8.com/material-two-tone/14/000000/retweet.png"
-                                                alt=""
-                                              />
-                                              <p className="list">
-                                                {repost(gists.postid)} Regist
-                                              </p>
-                                            </div>
-                                          </div>
-                                        </div>
-
-                                        <div
-                                          style={{
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            justifyContent: "center",
-                                            alignItems: "center",
-                                          }}
-                                        >
-                                          {gists.videourl ? (
-                                            <video className="vmd" controls>
-                                              <source
-                                                src={gists.videourl}
-                                                type="video/mp4"
-                                              />
-                                            </video>
-                                          ) : gists.imgarray ? (
-                                            <img
-                                              src={gists.imgarray[0].imgurl}
-                                              alt=""
-                                              className="allround-image"
-                                            />
-                                          ) : (
-                                            ""
-                                          )}
-
-                                          {sendFlag.includes(gists.postid) ? (
-                                            <img
-                                              src="https://img.icons8.com/ios-filled/24/FF0000/flag.png"
-                                              alt=""
-                                            />
-                                          ) : (
-                                            ""
-                                          )}
-                                        </div>
-                                      </Col>
-                                    </Row>
-                                    <GistModal
-                                      show={modalShow}
-                                      onHide={() => setModalShow(false)}
-                                      id={gistId}
-                                      schools={schools}
-                                      schGists={schGist}
-                                      flag={sendFlag}
-                                      users={users}
-                                      selectedGist={selectedGist}
-                                    />
-                                  </Container>
-                                </LazyLoad>
-                              );
-                            })}
-                        </div>
-                      ) : undefined
-                    ) : (
-                      gistArr
-                        .sort((a, b) => b.date - a.date)
-                        .map((gists) => {
-                          return sendFlag.includes(gists.postid) ? (
-                            <LazyLoad>
-                              <Container fluid>
-                                <Row>
-                                  <Col xs="12" className="all-gist">
-                                    <div className="gimst">
-                                      <div
-                                        className="allgist-div1"
-                                        onClick={() => handleGist(gists.postid)}
-                                      >
-                                        <img
-                                          src={gists.userDp}
-                                          alt=""
-                                          className="gist-image"
-                                        />
-                                        <div className="allgist-div1-sub">
-                                          <p className="allgist-div1-sub-header">
-                                            {gists.user.username}
-                                          </p>
-                                          <p className="allgist-div1-sub-text">
-                                            {new Date(
-                                              gists.date
-                                            ).toDateString()}
-                                          </p>
-                                        </div>
-                                      </div>
-                                      <div className="gimst-div">
-                                        <ShowMoreText
-                                          lines={1}
-                                          more="Show more"
-                                          less="Show less"
-                                          className="content"
-                                          anchorClass="my-anchor-css-class pt"
-                                          onClick={executeOnClick}
-                                          expanded={false}
-                                          width={700}
-                                        >
-                                          <p className="textss">{gists.text}</p>
-                                        </ShowMoreText>
-                                      </div>
-
-                                      <div>
-                                        {gists.sharedpost ? (
-                                          <div className="shared">
-                                            <span
-                                              style={{
-                                                fontSize: "10px",
-                                                color: "grey",
-                                              }}
-                                            >
-                                              {" "}
-                                              <img
-                                                src="https://img.icons8.com/material-two-tone/14/000000/retweet.png"
-                                                alt=""
-                                              />{" "}
-                                              Reposted
-                                            </span>
-                                            <p>{gists.sharedpost.text}</p>
-                                            <img
-                                              src={
-                                                gists.sharedpost.imgarray[0]
-                                                  .imgurl
-                                              }
-                                              alt=""
-                                              className="allround-image"
-                                            />
-                                          </div>
-                                        ) : undefined}
-                                      </div>
-
-                                      <div className="action">
-                                        <div
-                                          style={{
-                                            display: "flex",
-                                            justifyContent: "flex-start",
-                                            alignItems: "center",
-                                            width: "100px",
-                                          }}
-                                        >
-                                          <img
-                                            src="https://img.icons8.com/ios-glyphs/14/000000/chat.png"
-                                            alt=""
-                                          />
-                                          <p className="list">
-                                            {postComment(gists.postid)} comment
-                                          </p>
-                                        </div>
-                                        <div
-                                          style={{
-                                            display: "flex",
-                                            justifyContent: "flex-start",
-                                            alignItems: "center",
-                                            width: "100px",
-                                          }}
-                                        >
-                                          <img
-                                            src="https://img.icons8.com/ios-glyphs/14/000000/filled-like.png"
-                                            alt=""
-                                          />
-                                          <p className="list">
-                                            {postLikes(gists.postid)} like
-                                          </p>
-                                        </div>
-                                        <div
-                                          style={{
-                                            display: "flex",
-                                            justifyContent: "flex-start",
-                                            alignItems: "center",
-                                            width: "100px",
-                                          }}
-                                        >
-                                          <img
-                                            src="https://img.icons8.com/material-two-tone/14/000000/retweet.png"
-                                            alt=""
-                                          />
-                                          <p className="list">
-                                            {repost(gists.postid)} Regist
-                                          </p>
-                                        </div>
-                                      </div>
-                                    </div>
-
-                                    <div
-                                      style={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                      }}
-                                    >
-                                      {gists.videourl ? (
-                                        <video className="vmd" controls>
-                                          <source
-                                            src={gists.videourl}
-                                            type="video/mp4"
-                                          />
-                                        </video>
-                                      ) : gists.imgarray ? (
-                                        <img
-                                          src={gists.imgarray[0].imgurl}
-                                          alt=""
-                                          className="allround-image"
-                                        />
-                                      ) : (
-                                        ""
-                                      )}
-
-                                      {sendFlag.includes(gists.postid) ? (
-                                        <img
-                                          src="https://img.icons8.com/ios-filled/24/FF0000/flag.png"
-                                          alt=""
-                                        />
-                                      ) : (
-                                        ""
-                                      )}
-                                    </div>
-                                  </Col>
-                                </Row>
-                                <GistModal
-                                  show={modalShow}
-                                  onHide={() => setModalShow(false)}
-                                  id={gistId}
-                                  schools={schools}
-                                  schGists={schGist}
-                                  users={users}
-                                  flag={sendFlag}
-                                  selectedGist={selectedGist}
-                                />
-                              </Container>
-                            </LazyLoad>
-                          ) : (
-                            ""
-                          );
-                        })
-                    )}
+            <div className="gist-filter-by-date">
+              <p>By Date</p>
+              <div className="input-elements">
+                <Form name="time_related_controls" onFinish={onFinish}>
+                  <Form.Item name="date-picker" label="">
+                    <DatePicker
+                      className="search-by-date"
+                      placeholder="Start Date"
+                    />
+                  </Form.Item>
+                  <Form.Item name="date-picker" label="">
+                    <DatePicker
+                      className="search-by-date"
+                      placeholder="End Date"
+                    />
+                  </Form.Item>
+                  <div className="btn-wrapper">
+                    <Button type="button">Reset</Button>
+                    <Button type="submit">Submit</Button>
                   </div>
-                ) : (
-                  <div style={{ marginLeft: "-3%" }}>
-                    {radio === "All" ? (
-                      schGist ? (
-                        <div>
-                          {gistDateFilter
-                            .sort((a, b) => b.date - a.date)
-                            .map((gists) => {
-                              return (
-                                <LazyLoad>
-                                  <Container fluid>
-                                    <Row>
-                                      <Col xs="12" className="all-gist">
-                                        <div className="gimst">
-                                          <div
-                                            className="allgist-div1"
-                                            onClick={() =>
-                                              handleGist(gists.postid)
-                                            }
-                                          >
-                                            <img
-                                              src={gists.userDp}
-                                              alt=""
-                                              className="gist-image"
-                                            />
-                                            <div className="allgist-div1-sub">
-                                              <p className="allgist-div1-sub-header">
-                                                {gists.user.username}
-                                              </p>
-                                              <p className="allgist-div1-sub-text">
-                                                {new Date(
-                                                  gists.date
-                                                ).toDateString()}
-                                              </p>
-                                            </div>
-                                          </div>
-                                          <div className="gimst-div">
-                                            <ShowMoreText
-                                              lines={1}
-                                              more="Show more"
-                                              less="Show less"
-                                              className="content"
-                                              anchorClass="my-anchor-css-class pt"
-                                              onClick={executeOnClick}
-                                              expanded={false}
-                                              width={700}
-                                            >
-                                              <p className="textss">
-                                                {gists.text}
-                                              </p>
-                                            </ShowMoreText>
-                                          </div>
-
-                                          <div>
-                                            {gists.sharedpost ? (
-                                              <div className="shared">
-                                                <span
-                                                  style={{
-                                                    fontSize: "10px",
-                                                    color: "grey",
-                                                  }}
-                                                >
-                                                  {" "}
-                                                  <img
-                                                    src="https://img.icons8.com/material-two-tone/14/000000/retweet.png"
-                                                    alt=""
-                                                  />{" "}
-                                                  Reposted
-                                                </span>
-                                                <p>{gists.sharedpost.text}</p>
-                                                <img
-                                                  src={
-                                                    gists.sharedpost.imgarray[0]
-                                                      .imgurl
-                                                  }
-                                                  alt=""
-                                                  className="allround-image"
-                                                />
-                                              </div>
-                                            ) : undefined}
-                                          </div>
-
-                                          <div className="action">
-                                            <div
-                                              style={{
-                                                display: "flex",
-                                                justifyContent: "flex-start",
-                                                alignItems: "center",
-                                                width: "100px",
-                                              }}
-                                            >
-                                              <img
-                                                src="https://img.icons8.com/ios-glyphs/14/000000/chat.png"
-                                                alt=""
-                                              />
-                                              <p className="list">
-                                                {postComment(gists.postid)}{" "}
-                                                comment
-                                              </p>
-                                            </div>
-                                            <div
-                                              style={{
-                                                display: "flex",
-                                                justifyContent: "flex-start",
-                                                alignItems: "center",
-                                                width: "100px",
-                                              }}
-                                            >
-                                              <img
-                                                src="https://img.icons8.com/ios-glyphs/14/000000/filled-like.png"
-                                                alt=""
-                                              />
-                                              <p className="list">
-                                                {postLikes(gists.postid)} like
-                                              </p>
-                                            </div>
-                                            <div
-                                              style={{
-                                                display: "flex",
-                                                justifyContent: "flex-start",
-                                                alignItems: "center",
-                                                width: "100px",
-                                              }}
-                                            >
-                                              <img
-                                                src="https://img.icons8.com/material-two-tone/14/000000/retweet.png"
-                                                alt=""
-                                              />
-                                              <p className="list">
-                                                {repost(gists.postid)} Regist
-                                              </p>
-                                            </div>
-                                          </div>
-                                        </div>
-
-                                        <div
-                                          style={{
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            justifyContent: "center",
-                                            alignItems: "center",
-                                          }}
-                                        >
-                                          {gists.videourl ? (
-                                            <video className="vmd" controls>
-                                              <source
-                                                src={gists.videourl}
-                                                type="video/mp4"
-                                              />
-                                            </video>
-                                          ) : gists.imgarray ? (
-                                            <img
-                                              src={gists.imgarray[0].imgurl}
-                                              alt=""
-                                              className="allround-image"
-                                            />
-                                          ) : (
-                                            ""
-                                          )}
-
-                                          {sendFlag.includes(gists.postid) ? (
-                                            <img
-                                              src="https://img.icons8.com/ios-filled/24/FF0000/flag.png"
-                                              alt=""
-                                            />
-                                          ) : (
-                                            ""
-                                          )}
-                                        </div>
-                                      </Col>
-                                    </Row>
-                                    <GistModal
-                                      show={modalShow}
-                                      onHide={() => setModalShow(false)}
-                                      id={gistId}
-                                      schools={schools}
-                                      schGists={schGist}
-                                      flag={sendFlag}
-                                      users={users}
-                                      selectedGist={selectedGist}
-                                    />
-                                  </Container>
-                                </LazyLoad>
-                              );
-                            })}
-                        </div>
-                      ) : undefined
-                    ) : (
-                      gistDateFilter
-                        .sort((a, b) => b.date - a.date)
-                        .map((gists) => {
-                          return sendFlag.includes(gists.postid) ? (
-                            <LazyLoad>
-                              <Container fluid>
-                                <Row>
-                                  <Col xs="12" className="all-gist">
-                                    <div className="gimst">
-                                      <div
-                                        className="allgist-div1"
-                                        onClick={() => handleGist(gists.postid)}
-                                      >
-                                        <img
-                                          src={gists.userDp}
-                                          alt=""
-                                          className="gist-image"
-                                        />
-                                        <div className="allgist-div1-sub">
-                                          <p className="allgist-div1-sub-header">
-                                            {gists.user.username}
-                                          </p>
-                                          <p className="allgist-div1-sub-text">
-                                            {new Date(
-                                              gists.date
-                                            ).toDateString()}
-                                          </p>
-                                        </div>
-                                      </div>
-                                      <div className="gimst-div">
-                                        <ShowMoreText
-                                          lines={1}
-                                          more="Show more"
-                                          less="Show less"
-                                          className="content"
-                                          anchorClass="my-anchor-css-class pt"
-                                          onClick={executeOnClick}
-                                          expanded={false}
-                                          width={700}
-                                        >
-                                          <p className="textss">{gists.text}</p>
-                                        </ShowMoreText>
-                                      </div>
-
-                                      <div>
-                                        {gists.sharedpost ? (
-                                          <div className="shared">
-                                            <span
-                                              style={{
-                                                fontSize: "10px",
-                                                color: "grey",
-                                              }}
-                                            >
-                                              {" "}
-                                              <img
-                                                src="https://img.icons8.com/material-two-tone/14/000000/retweet.png"
-                                                alt=""
-                                              />{" "}
-                                              Reposted
-                                            </span>
-                                            <p>{gists.sharedpost.text}</p>
-                                            <img
-                                              src={
-                                                gists.sharedpost.imgarray[0]
-                                                  .imgurl
-                                              }
-                                              alt=""
-                                              className="allround-image"
-                                            />
-                                          </div>
-                                        ) : undefined}
-                                      </div>
-
-                                      <div className="action">
-                                        <div
-                                          style={{
-                                            display: "flex",
-                                            justifyContent: "flex-start",
-                                            alignItems: "center",
-                                            width: "100px",
-                                          }}
-                                        >
-                                          <img
-                                            src="https://img.icons8.com/ios-glyphs/14/000000/chat.png"
-                                            alt=""
-                                          />
-                                          <p className="list">
-                                            {postComment(gists.postid)} comment
-                                          </p>
-                                        </div>
-                                        <div
-                                          style={{
-                                            display: "flex",
-                                            justifyContent: "flex-start",
-                                            alignItems: "center",
-                                            width: "100px",
-                                          }}
-                                        >
-                                          <img
-                                            src="https://img.icons8.com/ios-glyphs/14/000000/filled-like.png"
-                                            alt=""
-                                          />
-                                          <p className="list">
-                                            {postLikes(gists.postid)} like
-                                          </p>
-                                        </div>
-                                        <div
-                                          style={{
-                                            display: "flex",
-                                            justifyContent: "flex-start",
-                                            alignItems: "center",
-                                            width: "100px",
-                                          }}
-                                        >
-                                          <img
-                                            src="https://img.icons8.com/material-two-tone/14/000000/retweet.png"
-                                            alt=""
-                                          />
-                                          <p className="list">
-                                            {repost(gists.postid)} Regist
-                                          </p>
-                                        </div>
-                                      </div>
-                                    </div>
-
-                                    <div
-                                      style={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                      }}
-                                    >
-                                      {gists.videourl ? (
-                                        <video className="vmd" controls>
-                                          <source
-                                            src={gists.videourl}
-                                            type="video/mp4"
-                                          />
-                                        </video>
-                                      ) : gists.imgarray ? (
-                                        <img
-                                          src={gists.imgarray[0].imgurl}
-                                          alt=""
-                                          className="allround-image"
-                                        />
-                                      ) : (
-                                        ""
-                                      )}
-
-                                      {sendFlag.includes(gists.postid) ? (
-                                        <img
-                                          src="https://img.icons8.com/ios-filled/24/FF0000/flag.png"
-                                          alt=""
-                                        />
-                                      ) : (
-                                        ""
-                                      )}
-                                    </div>
-                                  </Col>
-                                </Row>
-                                <GistModal
-                                  show={modalShow}
-                                  onHide={() => setModalShow(false)}
-                                  id={gistId}
-                                  schools={schools}
-                                  schGists={schGist}
-                                  users={users}
-                                  flag={sendFlag}
-                                  selectedGist={selectedGist}
-                                />
-                              </Container>
-                            </LazyLoad>
-                          ) : (
-                            ""
-                          );
-                        })
-                    )}
-                  </div>
-                )}
-              </Col>
-
-              <Col lg="4" md="4" xs="12" sm="4" className="filtered">
-                <div className="filter-div">
-                  <p className="filter-text">
-                    <img
-                      src="https://img.icons8.com/ios-glyphs/20/F07841/filter.png"
-                      alt=""
-                    />{" "}
-                    Filter
-                  </p>
-                </div>
-
-                <div>
-                  <label>By Status</label>
-                  <br />
-                  <input
-                    type="radio"
-                    value="All"
-                    checked={radio === "All"}
-                    onChange={(e) => setRadio(e.target.value)}
-                  />
-                  <span className="all">All</span>
-                  <br />
-                  <input
-                    type="radio"
-                    value="Flagged"
-                    checked={radio === "Flagged"}
-                    onChange={(e) => setRadio(e.target.value)}
-                  />
-                  <span className="all">Flagged</span>
-                  <br />
-                </div>
-
-                <div className="date-div">
-                  <label>By Date</label>
-                  <br />
-                  <input
-                    type="text"
-                    onFocus={_onFocus}
-                    onBlur={_onBlur}
-                    id="date"
-                    placeholder="Start Date"
-                    value={startDate}
-                    // checked={radio === 'All'}
-                    className="date-filter"
-                    onChange={(e) => setStartDate(e.target.value)}
-                  />
-
-                  <input
-                    type="text"
-                    onFocus={_onFocus}
-                    onBlur={_onBlur}
-                    placeholder="End Date"
-                    value={endDate}
-                    className="date-filter"
-                    onChange={(e) => setEndDate(e.target.value)}
-                  />
-                </div>
-                <button className="btn btns2" onClick={resetSubmit}>
-                  {" "}
-                  Reset
-                </button>
-                <button
-                  className="btn btns"
-                  onClick={searchSubmit}
-                  style={{ marginLeft: "3px" }}
-                >
-                  {" "}
-                  Submit
-                </button>
-              </Col>
-            </Row>
-          </Container>
+                </Form>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </BaseMarkUp>

@@ -20,9 +20,10 @@ export const GeneralHelpers = {
       return a - b;
     });
   },
-  fetchDatabaseRecord: (node) => {
+  fetchDatabaseRecord: async (node) => {
     const nodeList = [];
-    var dbNodeRef = fire.database().ref().child(node);
+    var dbNodeRef = await fire.database().ref().child(node)
+    
     dbNodeRef.on("value", (snap) => {
       const node = snap.val();
       for (let n in node) {

@@ -1,8 +1,6 @@
 import { Button, Dropdown, Menu, Table } from "antd";
 import { DownOutlined } from "@ant-design/icons";
-import Avatar from "antd/lib/avatar/avatar";
 import React, { useEffect, useState } from "react";
-import moment from "moment";
 import { useHistory } from "react-router";
 import {
   OnlineUsersIcon,
@@ -11,34 +9,15 @@ import {
   UsersIcon,
 } from "../../assest/icons";
 import fire from "../../Firebase/firebase";
-import BackButton from "../BackButton/BackButton";
 import BaseMarkUp from "../Base/BaseMarkUp";
 import Card from "../Card";
 import CardLoading from "../Card/CardLoading";
 import SearchComponent, { OnSearch } from "../SearchComponent";
+import MenuOverlay from '../MenuOverlay'
 import "./users.scss";
 import { GeneralHelpers } from "../../Utils/Helpers";
+import { userColumn } from './TableColumns'
 
-const MenuOverlay = (onClick) => (
-  <Menu
-    style={{ boxShadow: "0px 3px 6px #00000029", borderRadius: 5, width: 88 }}
-  >
-    <Menu.Item
-      disabled={true}
-      style={{ color: "#FFF", background: "#031A2F" }}
-      key="1"
-      onClick={onClick}
-    >
-      Sort by
-    </Menu.Item>
-    <Menu.Item style={{ padding: 10 }} key="earliest" onClick={onClick}>
-      Earliest
-    </Menu.Item>
-    <Menu.Item style={{ padding: 10 }} key="oldest" onClick={onClick}>
-      Oldest
-    </Menu.Item>
-  </Menu>
-);
 
 function Users() {
   const [users, setUsers] = useState({ all: [], online: [], search: [] });
@@ -106,49 +85,7 @@ function Users() {
     </Dropdown>
   );
 
-  const userColumn = [
-    {
-      title: "Username",
-      dataIndex: "username",
-      key: "username",
-      render: (username, value) => {
-        return (
-          <>
-            <Avatar src={value?.image} size={30} />
-            <span className="px-3">{username}</span>
-          </>
-        );
-      },
-      // width: 100
-    },
-    {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
-      // width: 100
-    },
-    {
-      title: "School",
-      dataIndex: "institution",
-      key: "school",
-      // width: 100
-    },
-    {
-      title: "Date",
-      dataIndex: "dateJoined",
-      key: "dateJoined",
-      defaultSortOrder: "descend",
-      sorter: (a, b) => a.dateJoined - b.dateJoined,
-      // width: 100,
-      render: (dateJoined) => moment(dateJoined).format("DD-MM-YYYY"),
-    },
-    {
-      title: versionTitle(),
-      dataIndex: "version",
-      key: "version",
-      // width: 200
-    },
-  ];
+
 
   const onSelectHeader = (value) => {
     if (value.key === "earliest") {
@@ -238,7 +175,7 @@ function Users() {
         <Table
           onRow={onRowClick}
           rowClassName={"rowClass"}
-          columns={userColumn}
+          columns={userColumn(versionTitle)}
           loading={loading}
           dataSource={dataSource()}
           scroll={{ y: 500 }}

@@ -4,25 +4,25 @@ import "firebase/firestore";
 
 import { functions } from "firebase";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBJqG4ROG2FsQlXAWvbtgOibo5PxAqGDUQ",
-  authDomain: "my-project-7307f.firebaseapp.com",
-  databaseURL: "https://my-project-7307f.firebaseio.com",
-  projectId: "my-project-7307f",
-  storageBucket: "my-project-7307f.appspot.com",
-  messagingSenderId: "712367246617",
-  appId: "1:712367246617:web:02e1571f7b95835f608988",
-};
-
-// var firebaseConfig = {
-//   apiKey: "AIzaSyDgNeshaL_tg2dWtVZn-8JencX__-WbW5k",
-//   authDomain: "schooln-test.firebaseapp.com",
-//   databaseURL: "https://schooln-test-default-rtdb.firebaseio.com",
-//   projectId: "schooln-test",
-//   storageBucket: "schooln-test.appspot.com",
-//   messagingSenderId: "150554653912",
-//   appId: "1:150554653912:web:0d88bc9919c1d94c2a53ad"
+// const firebaseConfig = {
+//   apiKey: "AIzaSyBJqG4ROG2FsQlXAWvbtgOibo5PxAqGDUQ",
+//   authDomain: "my-project-7307f.firebaseapp.com",
+//   databaseURL: "https://my-project-7307f.firebaseio.com",
+//   projectId: "my-project-7307f",
+//   storageBucket: "my-project-7307f.appspot.com",
+//   messagingSenderId: "712367246617",
+//   appId: "1:712367246617:web:02e1571f7b95835f608988",
 // };
+
+var firebaseConfig = {
+  apiKey: "AIzaSyDgNeshaL_tg2dWtVZn-8JencX__-WbW5k",
+  authDomain: "schooln-test.firebaseapp.com",
+  databaseURL: "https://schooln-test-default-rtdb.firebaseio.com",
+  projectId: "schooln-test",
+  storageBucket: "schooln-test.appspot.com",
+  messagingSenderId: "150554653912",
+  appId: "1:150554653912:web:0d88bc9919c1d94c2a53ad"
+};
 
 // Initialize Firebase
 var fire = firebase.initializeApp(firebaseConfig);

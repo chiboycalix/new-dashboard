@@ -33,7 +33,7 @@ function Search(props) {
     });
   }, []);
 
-  const parsed = QueryString.parse(props.location.search);
+  const parsed = QueryString.parse(props?.location?.search);
 
   const sendFlag = [];
   flag &&

@@ -16,7 +16,7 @@ const Login = () => {
       console.log("loader");
       setLoader(false);
     }, 5000);
-    if (email.includes("@schooln.ng")) {
+    if (email) {
       auth
         .signInWithEmailAndPassword(email, password)
         .then((user) => {

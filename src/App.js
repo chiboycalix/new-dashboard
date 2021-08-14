@@ -87,7 +87,7 @@ function App() {
         <Route exact path="/users/pending" component={() => <Pending />} />
         <Route exact path="/users/:userid" component={User} />
         <Route exact path="/user/:userid" component={UserInfo} />
-        <Route exact path="/pages" component={Pages} />
+        <Route exact path="/pages" component={() => <Pages />}/>
         <Route exact path="/materials" component={Materials} />
         <Route exact path="/gists" component={Gists} />
         <Route exact path="/schools" component={Schools} />
