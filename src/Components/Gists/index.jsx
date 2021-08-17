@@ -271,8 +271,8 @@ const Gists = () => {
                     />
                   </Form.Item>
                   <div className="btn-wrapper">
-                    <Button type="button">Reset</Button>
-                    <Button type="submit">Submit</Button>
+                    <Button type="button" className="primary">Reset</Button>
+                    <Button type="submit" className="primary">Submit</Button>
                   </div>
                 </Form>
               </div>

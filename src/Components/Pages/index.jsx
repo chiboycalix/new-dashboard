@@ -96,22 +96,27 @@ function Pages() {
           </div>
           
           <div className="sort_area">
-            <Dropdown
-              placement="bottomCenter"
-              overlay={() => MenuOverlay()}
-            >
-              <Button className="icon_section" type="link">
-                <img src={SortIconBlack} alt="sort-icon" /> Sort
-              </Button>
-            </Dropdown>
+            <div className="sort-dropdown">
+              <Dropdown
+                placement="bottomCenter"
+                overlay={() => MenuOverlay()}
+              >
+                <Button className="icon_section" type="link">
+                  <img src={SortIconBlack} alt="sort-icon" /> Sort
+                </Button>
+              </Dropdown>
+            </div>
             <div className="select_area">
               <Select records={schools} handleSearch={handleSearch} loading={loading}/>
             </div>
-            <SearchComponent
-              search
-              placeholder="Search by user name"
-              onChange=""
-            />
+            <div className="search-area">
+              <SearchComponent
+                search
+                placeholder="Search by user name"
+                onChange=""
+              />
+            </div>
+            
           </div>
         </div>
 

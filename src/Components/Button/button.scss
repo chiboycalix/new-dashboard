@@ -1,6 +1,5 @@
 button {
   width: 100%;
-  background: #eb5933 0% 0% no-repeat padding-box;
   border-radius: 3px;
   opacity: 1;
   font: normal normal normal 14px/21px Poppins;
@@ -10,4 +9,13 @@ button {
   border: none;
   outline: none;
   padding: .5rem;
+  &:active{
+    outline: none;
+  }
+}
+button.primary{
+  background: #eb5933 0% 0% no-repeat padding-box;
+}
+button.secondary{
+  background: #031A2F;
 }

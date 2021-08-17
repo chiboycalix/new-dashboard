@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from "react";
-import "./campaign.css";
-
-import { Table, OverlayTrigger, Popover } from "react-bootstrap";
+import "./campaign.scss";
+import { Table } from "react-bootstrap";
 import Spinner from "../Spinner";
 import fire from "../../Firebase/firebase";
 import Pagination from "../Pagination";
 import CurrencyFormat from "react-currency-format";
 import HeaderNav from "../HeaderNav";
 import BaseMarkUp from "../Base/BaseMarkUp";
+import MaterialsIcon from "../../assest/icons/materials.svg";
+import Card from "../Card";
+import SearchComponent, { OnSearch } from "../SearchComponent";
+import { campaignPagesColumn } from "./PagesTable/campaignPagesColumn";
+import Button from "../Button";
+import PagesTable from "./PagesTable";
+import StudentAmbassador from "./StudentAmbassadorTables";
 
 function Campaign() {
   const [campaign, setCampaign] = useState();
@@ -16,12 +22,14 @@ function Campaign() {
   const [loading, setLoading] = useState();
   const [currentPage, setCurrentPage] = useState(1);
   const [postPerPage] = useState(15);
+  const [tableView, setTableView] = useState("pages");
 
   const indexOfLastPost = currentPage * postPerPage;
   const indexOfFirstPost = indexOfLastPost - postPerPage;
   const currentPosts = campaign && campaign;
 
   const mts = campaign && campaign.length;
+
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -86,17 +94,73 @@ function Campaign() {
     fetchUsers();
   }, []);
 
-  // if (loading) {
-  //     return <Spinner />
-  // }
-
   const handleClick = (id) => {
     return (window.location.href = `/campaign/${id}`);
   };
 
+  React.useEffect(() => {
+    const view = localStorage.getItem('tableView');
+    if(view){
+      setTableView(view)
+    }else{
+      localStorage.setItem('tableView', 'pages');
+    }
+  }, [])
+
+  const handlePagesBtnClick = () => {
+    setTableView("pages");
+    localStorage.setItem('tableView', 'pages');
+  };
+  const handleAmbassadorBtnClick = () => {
+    setTableView("ambassadors");
+    localStorage.setItem('tableView', 'ambassadors');
+  };
+
   return (
     <BaseMarkUp>
-      <div className="app-div">
+      <div className="campaign-wrapper">
+        <div className="campaign-header">
+          <div className="campaign-cards">
+            <Card
+              label="Total Amount"
+              icon={MaterialsIcon}
+              value="400"
+              link="/campaign"
+            />
+          </div>
+          <div className="campaign-sort-area">
+            <div className="campaign-search-area">
+              <SearchComponent
+                search
+                placeholder="Search by Schools, user name"
+                onChange=""
+              />
+            </div>
+            <div className="campaign-pages-btn-area">
+              <Button
+                className={tableView === "pages" ? "primary" : "secondary"}
+                type="button"
+                onClick={handlePagesBtnClick}
+              >
+                Pages
+              </Button>
+            </div>
+            <div className="campaign-ambassadors-btn-area">
+              <Button
+                onClick={handleAmbassadorBtnClick}
+                className={tableView === "ambassadors" ? "primary" : "secondary"}
+                type="button"
+              >
+                Student Ambassador
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {tableView === "pages" ? <PagesTable /> : <StudentAmbassador />}
+      </div>
+
+      {/* <div className="app-div">
         <div className="users-section">
           <div className="search-div">
             <h1 className="amount">
@@ -271,7 +335,7 @@ function Campaign() {
             </tbody>
           </Table>
         </div>
-      </div>
+      </div> */}
     </BaseMarkUp>
   );
 }

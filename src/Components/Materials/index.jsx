@@ -1,13 +1,24 @@
 import React, { useState, useEffect } from "react";
-import "./materials.css";
+import "./materials.scss";
 
 import { firestore } from "../../Firebase/firebase";
 import Spinner from "../Spinner";
-import { OverlayTrigger, Popover, Table } from "react-bootstrap";
 import Pagination from "../Pagination";
 import CurrencyFormat from "react-currency-format";
 import HeaderNav from "../HeaderNav";
 import BaseMarkUp from "../Base/BaseMarkUp";
+import Card from "../Card";
+import {
+  OnlineUsersIcon,
+  PendingUsersIcon,
+  SortIconBlack,
+  UsersIcon,
+} from "../../assest/icons";
+import { Button, Dropdown, Menu, Table, OverlayTrigger, Popover, } from "antd";
+import SearchComponent, { OnSearch } from "../SearchComponent";
+import MenuOverlay from '../MenuOverlay';
+import MaterialsIcon from '../../assest/icons/materials.svg';
+import { materialsColumn } from './materialsColumn'
 
 function Materials() {
   const [materials, setMaterials] = useState([]);
@@ -37,10 +48,6 @@ function Materials() {
     };
     fetchMaterials();
   }, []);
-
-  // if (loading) {
-  //     return <Spinner />
-  // }
 
   const indexOfLastPost = currentPage * postPerPage;
   const indexOfFirstPost = indexOfLastPost - postPerPage;
@@ -84,9 +91,77 @@ function Materials() {
       0
     );
 
+    const handleSearch = () => {
+
+    }
   return (
     <BaseMarkUp>
-      <div className="app-div">
+      <div className="materials-wrapper">
+        <div className="materials-header">
+          <div className="materials-cards">
+            <Card
+              label="Material Resources"
+              icon={MaterialsIcon}
+              value="400"
+              link="/materials"
+            />
+            <Card
+              label="Total Material Cost"
+              icon={MaterialsIcon}
+              value="400"
+              link="/materials"
+            />
+          </div>
+          <div className="materials-sort-area">
+            <div className="materials-sort-dropdown">
+              <Dropdown placement="bottomCenter" overlay={() => MenuOverlay()}>
+                <Button className="icon_section" type="link">
+                  <img src={SortIconBlack} alt="sort-icon" /> Sort
+                </Button>
+              </Dropdown>
+            </div>
+            <div className="materials-search-area">
+              <SearchComponent
+                search
+                placeholder="Search by Schools, user name"
+                onChange=""
+              />
+            </div>
+          </div>
+
+        </div>
+
+        <Table
+          onRow=''
+          rowClassName={"rowClass"}
+          columns={materialsColumn()}
+          loading={false}
+          dataSource={[]}
+          scroll={{ y: 500 }}
+          // pagination={{
+          //   size: "small",
+          //   itemRender: "",
+          //   showSizeChanger: false,
+          //   total:50,
+          //   position: "both",
+          //   defaultPageSize: 20,
+          //   onShowSizeChange: (current, size) => {
+          //     setRecordPage(current);
+          //     setRecordPageSize(size);
+          //   },
+          //   onChange: (page, pageSize) => {
+          //     setRecordPage(page);
+          //     setRecordPageSize(pageSize);
+          //   },
+          //   showTotal: (total) =>
+          //     `Page ${recordPage} of ${
+          //       Math.floor(total / recordPageSize) + 1
+          //     } pages`,
+          // }}
+        />
+
+      </div>
+      {/* <div className="app-div">
         <div className="users-section">
           <div className="search-div">
             <h1 className="amount">
@@ -382,7 +457,7 @@ function Materials() {
             </tbody>
           </Table>
         </div>
-      </div>
+      </div> */}
     </BaseMarkUp>
   );
 }

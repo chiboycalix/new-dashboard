@@ -1,0 +1,43 @@
+.campaign-wrapper {
+    .campaign-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+  
+      .campaign-cards {
+        display: flex;
+        > * {
+          min-width: 200px !important;
+        }
+        > :not(:first-child) {
+          margin-left: 20px;
+        }
+      }
+      .campaign-sort-area {
+        flex-basis: 50%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 2rem;
+  
+        .campaign-search-area {
+          flex-basis: 50%;
+        }
+        .campaign-pages-btn-area{
+            flex-basis: 20%;
+        }
+        .campaign-ambassadors-btn-area{
+            flex-basis: 30%;
+        }
+      }
+    }
+  }
+  
+  .ant-table-thead > tr > th:nth-child(1) {
+    border-top-left-radius: 5px !important;
+  }
+  .ant-table-thead > tr > th:nth-child(7) {
+    border-top-right-radius: 5px !important;
+  }
+  
